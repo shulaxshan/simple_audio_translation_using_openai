@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Audio Transcription App</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    .container { max-width: 600px; margin: auto; }
+    label, input, textarea, button { display: block; width: 100%; margin-top: 15px; }
+    button { padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+    #output { margin-top: 20px; white-space: pre-wrap; background: #f4f4f4; padding: 10px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Upload Audio for Transcription</h2>
+    <form id="uploadForm">
+      <label for="file">Choose Audio File:</label>
+      <input type="file" name="file" id="file" required>
+
+      <label for="language">Enter Desired Language:</label>
+      <input type="text" name="language" id="language" placeholder="e.g. French" required>
+
+      <button type="submit">Upload</button>
+    </form>
+
+    <div id="output">Transcript will appear here.</div>
+  </div>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    const output = document.getElementById('output');
+
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+
+      output.innerText = 'Processing... Please wait.';
+
+      try {
+        const response = await fetch('/', {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await response.json();
+
+        output.innerText = data.response || 'No response received.';
+      } catch (error) {
+        output.innerText = 'An error occurred: ' + error.message;
+      }
+    });
+  </script>
+</body>
+</html>
